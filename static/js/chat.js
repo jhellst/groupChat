@@ -33,7 +33,11 @@ ws.onmessage = function (evt) {
   } else if (msg.type === "chat") {
     item = $(`<li><b>${msg.name}: </b>${msg.text}</li>`);
   } else if (msg.type === "get-joke") {
-    item = $(`<li>${msg.text}</li>`); // Joke needed
+    item = $(`<li>${msg.text}</li>`);
+  } else if (msg.type === "get-members") {
+    item = $(`<li><i>${msg.text}</i></li>`);
+  } else if (msg.type === 'private-message') {
+    item = $(`<li><i>${msg.text}</i></li>`);
   } else {
     return console.error(`bad message: ${msg}`);
   }
@@ -61,11 +65,17 @@ ws.onclose = function (evt) {
 $("form").submit(function (evt) {
   evt.preventDefault();
 
-  console.log("evt",evt);
+  //console.log("evt", evt);
+  const input = $("#m").val()
 
   let data;
-  if ($("#m").val() === "/joke") {
+  if (input === "/joke") {
     data = { type: "get-joke" };
+  } else if (input === "/members") {
+    data = { type: "get-members" };
+  } else if (input.startsWith("/priv")) {
+    const { priv, username, ...message } = input.split(' ');
+    data = { type: "private-message", recipient: username, text: message};
   } else {
     data = { type: "chat", text: $("#m").val() };
   }

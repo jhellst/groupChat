@@ -74,8 +74,13 @@ class Room {
    * */
 
   privateMessage(user, data) {
-  user.send(JSON.stringify(data));
-}
+
+    user.send(JSON.stringify(data));
+  }
+
+  getMemberList() {
+    return Array.from(this.members).map(member => member.name).join(", ");
+  }
 
 
 }

@@ -66,12 +66,28 @@ class ChatUser {
    *
    * */
 
-   handleJoke() {
+  handleJoke() {
     this.room.privateMessage(this, {
       name: this.name,
       type: "get-joke",
       text: "Daniel (he is a joke, get it?)",
     });
+  }
+
+  handleMemberList() {
+    this.room.privateMessage(this, {
+      name: this.name,
+      type: "get-members",
+      text: `Users: ${this.room.getMemberList()}`,
+    })
+  }
+
+  handlePrivateMessage(recipient, text) {
+    this.room.privateMessage(recipient, {
+      name: this.name,
+      type: "private-message",
+      text: text
+    })
   }
 
   /** Handle messages from client:
@@ -90,6 +106,8 @@ class ChatUser {
     if (msg.type === "join") this.handleJoin(msg.name);
     else if (msg.type === "chat") this.handleChat(msg.text);
     else if (msg.type === "get-joke") this.handleJoke(msg.text);
+    else if (msg.type === "get-members") this.handleMemberList(msg.text);
+    else if (msg.type === "private-message") this.handlePrivateMessage(msg.recipient, msg.text);
     else throw new Error(`bad message: ${msg.type}`);
   }
 
