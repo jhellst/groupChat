@@ -67,6 +67,17 @@ class Room {
       member.send(JSON.stringify(data));
     }
   }
+
+  /** Send message to selected member in a room.
+   *
+   * @param data {string} message to send
+   * */
+
+  privateMessage(user, data) {
+  user.send(JSON.stringify(data));
+}
+
+
 }
 
 module.exports = Room;

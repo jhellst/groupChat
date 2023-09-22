@@ -62,6 +62,18 @@ class ChatUser {
     });
   }
 
+  /** Handle a joke: broadcast to the user who requested it.
+   *
+   * */
+
+   handleJoke() {
+    this.room.privateMessage(this, {
+      name: this.name,
+      type: "get-joke",
+      text: "Daniel (he is a joke, get it?)",
+    });
+  }
+
   /** Handle messages from client:
    *
    * @param jsonData {string} raw message data
@@ -77,6 +89,7 @@ class ChatUser {
 
     if (msg.type === "join") this.handleJoin(msg.name);
     else if (msg.type === "chat") this.handleChat(msg.text);
+    else if (msg.type === "get-joke") this.handleJoke(msg.text);
     else throw new Error(`bad message: ${msg.type}`);
   }
 
