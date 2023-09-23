@@ -74,8 +74,11 @@ $("form").submit(function (evt) {
   } else if (input === "/members") {
     data = { type: "get-members" };
   } else if (input.startsWith("/priv")) {
-    const { priv, username, ...message } = input.split(' ');
-    data = { type: "private-message", recipient: username, text: message};
+    const [ priv, username, ...message ] = input.split(' ');
+    data = { type: "private-message", recipient: username, text: message.join(" ")};
+  } else if (input.startsWith("/name")) {
+    const [ name, username ] = input.split(' ');
+    data = { type: "change-username", text: username};
   } else {
     data = { type: "chat", text: $("#m").val() };
   }

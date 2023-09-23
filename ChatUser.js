@@ -67,7 +67,7 @@ class ChatUser {
    * */
 
   handleJoke() {
-    this.room.privateMessage(this, {
+    this.room.selfMessage(this, {
       name: this.name,
       type: "get-joke",
       text: "Daniel (he is a joke, get it?)",
@@ -75,7 +75,7 @@ class ChatUser {
   }
 
   handleMemberList() {
-    this.room.privateMessage(this, {
+    this.room.selfMessage(this, {
       name: this.name,
       type: "get-members",
       text: `Users: ${this.room.getMemberList()}`,
@@ -83,12 +83,32 @@ class ChatUser {
   }
 
   handlePrivateMessage(recipient, text) {
+
+    console.log("Recipient", recipient, "Text", text);
+
     this.room.privateMessage(recipient, {
       name: this.name,
       type: "private-message",
       text: text
     })
   }
+
+  changeUsername(username) {
+    this.name = username;
+  }
+
+  handleChangeUsername(username) {
+    const currentName = this.name;
+    this.changeUsername(username);
+    const updatedName = this.name;
+
+    this.room.broadcast({
+      name: "server",
+      type: "chat",
+      text: `The username for ${currentName} has changed to ${updatedName}`,
+    });
+  }
+
 
   /** Handle messages from client:
    *
@@ -108,6 +128,7 @@ class ChatUser {
     else if (msg.type === "get-joke") this.handleJoke(msg.text);
     else if (msg.type === "get-members") this.handleMemberList(msg.text);
     else if (msg.type === "private-message") this.handlePrivateMessage(msg.recipient, msg.text);
+    else if (msg.type === "change-username") this.handleChangeUsername(msg.text);
     else throw new Error(`bad message: ${msg.type}`);
   }
 

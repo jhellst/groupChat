@@ -68,15 +68,29 @@ class Room {
     }
   }
 
+  /** Send message to self in a room.
+   *
+   * @param data {string} message to send
+   * */
+
+  selfMessage(user, data) {
+    user.send(JSON.stringify(data));
+  }
+
+
   /** Send message to selected member in a room.
    *
    * @param data {string} message to send
    * */
 
-  privateMessage(user, data) {
+   privateMessage(username, data) {
+    const response = Array.from(this.members).filter(member => member.name === username);
+    const recipient = response[0];
 
-    user.send(JSON.stringify(data));
+    recipient.send(JSON.stringify(data));
   }
+
+
 
   getMemberList() {
     return Array.from(this.members).map(member => member.name).join(", ");
